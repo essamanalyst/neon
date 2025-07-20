@@ -24,7 +24,7 @@ def get_db_connection():
             user=DB_USER,
             password=DB_PASSWORD,
             port=DB_PORT,
-            sslmode='require' # Neon.tech يتطلب اتصال SSL
+            sslmode='require' # هذا مهم جداً لـ Neon.tech
         )
         return conn
     except Exception as e:
