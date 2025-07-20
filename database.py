@@ -70,14 +70,14 @@ def get_user_by_username(username: str) -> Optional[Dict]:
         u.username,
         u.password_hash,
         u.role,
-        u.assigned_region,
+        u.region_id as assigned_region,  # تغيير هنا من assigned_region إلى region_id
         u.last_login,
         ha.admin_name AS health_admin_name,
         g.governorate_name AS governorate_admin_governorate_name
     FROM
         Users u
     LEFT JOIN
-        HealthAdministrations ha ON u.assigned_region = ha.admin_id
+        HealthAdministrations ha ON u.region_id = ha.admin_id  # تغيير هنا أيضاً
     LEFT JOIN
         GovernorateAdmins ga ON u.user_id = ga.user_id
     LEFT JOIN
@@ -88,7 +88,6 @@ def get_user_by_username(username: str) -> Optional[Dict]:
     user_data = execute_query(query, (username,), fetch_one=True)
     if user_data:
         # إعادة هيكلة البيانات لتتوافق مع التنسيق المتوقع في باقي الكود
-        # (خاصة إذا كانت باقي الأجزاء تتوقع بنية معينة من Supabase)
         user_dict = dict(user_data)
         if user_dict.get('health_admin_name'):
             user_dict['HealthAdministrations'] = {'admin_name': user_dict['health_admin_name']}
